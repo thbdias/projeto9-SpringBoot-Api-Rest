@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,13 @@ public class IndexController {
 		//usuário já tem que vir com o id para atualizar...senão gravará um novo registro
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
 		return new ResponseEntity<Usuario>(usuarioSalvo, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "/{id}", produces = "application/text")
+	public ResponseEntity delete(@PathVariable("id") Long id) {		
+				
+		usuarioRepository.deleteById(id);
+		return new ResponseEntity("deletado", HttpStatus.OK);
 	}
 	
 }
