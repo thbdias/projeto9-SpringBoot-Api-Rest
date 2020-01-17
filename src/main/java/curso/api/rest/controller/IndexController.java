@@ -53,7 +53,10 @@ public class IndexController {
 	@PutMapping(value = "/", produces = "application/json")
 	public ResponseEntity<Usuario> atualizar(@RequestBody Usuario usuario) {		
 		
-		//usuário já tem que vir com o id para atualizar...senão gravará um novo registro
+		for (int i = 0; i < usuario.getTelefones().size(); i++) {
+			usuario.getTelefones().get(i).setUsuario(usuario);
+		}
+		
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
 		return new ResponseEntity<Usuario>(usuarioSalvo, HttpStatus.OK);
 	}
