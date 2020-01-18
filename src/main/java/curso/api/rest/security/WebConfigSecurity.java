@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.AntPathMatcher;
@@ -25,46 +26,46 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private ImplementacaoUserDetailsService implementacaoUserDetailsService;
 	
-	
 
 	@Override //configura as solicitaçoes de acesso por Http
 	protected void configure(HttpSecurity http) throws Exception {		
 		http
-		.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) //ativando a protecao contra usuario que nao estao validados por token
-		.disable() //desativa as configuracoes padrao de memoria
-		.authorizeRequests() //permitir restringir acessos
-		.antMatchers(HttpMethod.GET, "/").permitAll() //Qualquer usuario acessa a pagina inicial
-		.antMatchers(HttpMethod.GET, "/index").permitAll() //Qualquer usuario acessa ao index
-//		.antMatchers(HttpMethod.GET, "/cadastroPessoa").hasAnyRole("ADMIN") //so pode acessar essa pagina quem possui regra ADMIN
+		
+		//ativando a protecao contra usuario que nao estao validados por token
+		.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) 
+		
+		//desativa as configuracoes padrao de memoria
+		.disable() 
+		
+		//permitir restringir acessos
+		.authorizeRequests() 
+		
+		//Qualquer usuario acessa a pagina inicial
+		.antMatchers(HttpMethod.GET, "/").permitAll() 
+		
+		//Qualquer usuario acessa ao index
+		.antMatchers(HttpMethod.GET, "/index").permitAll() 
+		
 		.anyRequest().authenticated()
-//		.and().formLogin().permitAll() //permite qualquer usuario
-//		.loginPage("/login") //manda pra tela de login
-//		.defaultSuccessUrl("/cadastropessoa") //se logar manda pra essa tela
-//		.failureForwardUrl("/login?error=true") //se falhar o login
-		.and().logout().logoutSuccessUrl("/index") //redireciona após o user deslogar do sistema		
-		.logoutRequestMatcher(new AntPathRequestMatcher("/logout")); //mapeia URL de Logout e invalida usuário autenticado - ao passar url de logout encerra cessao
+		
+		//redireciona após o user deslogar do sistema		
+		.and().logout().logoutSuccessUrl("/index") 
+		
+		//mapeia URL de Logout e invalida usuário autenticado - ao passar url de logout encerra cessao
+		.logoutRequestMatcher(new AntPathRequestMatcher("/logout")) 
+		
+		//filtra requisicoes de login para autenticar
+		.and().addFilterBefore(new JWTLoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class) 
+		
+		//filtra demais requisicoes para verificar a presenca do TOKEN JWT no HEADER HTTP
+		.addFilterBefore(new JwtApiAutenticacaoFilter(), UsernamePasswordAuthenticationFilter.class); 
 	}
 	
 	@Override //cria autenticacao do usuario com banco de dados ou em memoria
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {		
 		//service quer irá consultar o usuário no banco de dados
 		auth.userDetailsService(implementacaoUserDetailsService)
 		.passwordEncoder(new BCryptPasswordEncoder()); //padrao de condificacao de senha
-		
-		/* //auth.inMemoryAuthentication().passwordEncoder(NoOpPasswordEncoder.getInstance())
-		auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
-		.withUser("admin")
-		//.password("123")
-		.password("$2a$10$4FwR2ejZNUQVO6VOQJiHz.gANug3ykY/pV1Gb/zF.3NGoey.aYZmy")
-		.roles("ADMIN");*/
-	}
-	
-	@Override //ignora URL especifica
-	public void configure(WebSecurity web) throws Exception {
-		//pertmite que tudo que tiver dentro dessa pasta possa ser acessado sem validacao
-		//pq na tela de login usa-se materialize
-//		web.ignoring().antMatchers("/materialize/**"); 		
-	}
+	}		
 	
 }
