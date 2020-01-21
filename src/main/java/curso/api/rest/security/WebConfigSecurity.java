@@ -46,6 +46,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter {
 		//Qualquer usuario acessa ao index
 		.antMatchers(HttpMethod.GET, "/index").permitAll() 
 		
+		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+		
 		.anyRequest().authenticated()
 		
 		//redireciona após o user deslogar do sistema		

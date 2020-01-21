@@ -52,7 +52,7 @@ public class JWTTokenAutenticacaoService {
 		response.addHeader(HEADER_STRING, token); //Authorization: Bearer 8785as4874w8487w548w74848w78484w8484d84f8d4
 	
 		//liberando resposta para porta diferente (no mesmo servidor) do projeto angular
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		liberacaoCors(response);
 		
 		//add token como resposta no corpo do http
 		response.getWriter().write("{\"Authorization\": \""+token+"\"}");
@@ -85,9 +85,25 @@ public class JWTTokenAutenticacaoService {
 		}
 		
 		//liberando resposta para porta diferente (no mesmo servidor) do projeto angular
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		liberacaoCors(response);
 		return null; //nao autorizado
 						
+	}
+
+
+	//liberando resposta para porta diferente (no mesmo servidor) do projeto angular
+	private void liberacaoCors(HttpServletResponse response) {
+		if (response.getHeader("Access-Control-Allow-Origin") == null) {
+			response.addHeader("Access-Control-Allow-Origin", "*");
+		}
+		
+		if (response.getHeader("Access-Control-Allow-Headers") == null) {
+			response.addHeader("Access-Control-Allow-Headers", "*");
+		}
+		
+		if (response.getHeader("Access-Control-Request-Headers") == null) {
+			response.addHeader("Access-Control-Request-Headers", "*");
+		}
 	}
 }
 
