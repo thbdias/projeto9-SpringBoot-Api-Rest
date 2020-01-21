@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,14 +48,16 @@ public class IndexController {
 		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
 	}
 	
+	
 	//vamos supor que o carregamento de usuários seja um processo lento e queremos controlar ele com cache para agilizar o processo
-	@GetMapping(value = "/", produces = "application/json")
-	@Cacheable("cacheusuarios")
+//	@Cacheable("cacheusuarios") //mantem em cache os dados, porém quando há atualização o cache permanece antigo
+	@GetMapping(value = "/", produces = "application/json")	
+	@CachePut("cacheusuarios") //mantem em cache os dados, e quando há atualização o cache é atualizado ?????? acho que não ta funcionando direito
 	public ResponseEntity<List<Usuario>> init2() throws InterruptedException {		
 		
 		List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
 		
-		Thread.sleep(6000); //segura o codigo por 6 segundos, simulando um processo lento
+//		Thread.sleep(6000); //segura o codigo por 6 segundos, simulando um processo lento
 		
 		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
 	}
