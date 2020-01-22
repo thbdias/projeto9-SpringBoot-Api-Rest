@@ -31,11 +31,11 @@ public class IndexController {
 	private UsuarioRepository usuarioRepository;
 	
 //	@GetMapping(value = "v1/{id}", produces = "application/json") //ou
-	@GetMapping(value = "{id}", produces = "application/json", headers = "X-API-Version=v1") //passar no cabecalho da requisicao
+//	@GetMapping(value = "{id}", produces = "application/json", headers = "X-API-Version=v1") //passar no cabecalho da requisicao
+	@GetMapping(value = "/{id}", produces = "application/json") 
 	public ResponseEntity<Usuario> initV1(@PathVariable (value = "id") Long id) {		
 		
 		Optional<Usuario> usuario = usuarioRepository.findById(id);	
-		System.out.println("Executando Versão 1");
 		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
 	}
 	
