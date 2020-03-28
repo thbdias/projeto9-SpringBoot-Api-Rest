@@ -39,17 +39,21 @@ public class Usuario implements UserDetails {
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Telefone> telefones = new ArrayList<Telefone>();
 	
+	//OneToMany -> um usuário pode ter muitas regras (roles)
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "usuarios_role", //cria tabela de acesso do usuário - muitos para muitos
+	@JoinTable(name = "usuarios_role", //cria tabela de acesso do usuário - muitos para muitos (uma regra pode ter muitos usuários)
 				uniqueConstraints = @UniqueConstraint( //adicionando uma constraint
-										columnNames = {"usuario_id", "role_id"},
-										name = "unique_role_user"),
+														columnNames = {"usuario_id", "role_id"},
+														name = "unique_role_user"
+													),
+				//tabela Usuario
 				joinColumns = @JoinColumn( //unindo tabelas
-								name = "usuario_id", //da nova tabela = usuarios_role
-								referencedColumnName = "id", //da tabela usuario
-								table = "usuario",
-								unique = false, //pode se repetir usuario
-								foreignKey = @ForeignKey(name = "usuario_fk", value = ConstraintMode.CONSTRAINT)),
+											name = "usuario_id", //da nova tabela = usuarios_role
+											referencedColumnName = "id", //da tabela usuario
+											table = "usuario",
+											unique = false, //pode se repetir usuario
+											foreignKey = @ForeignKey(name = "usuario_fk", value = ConstraintMode.CONSTRAINT)
+										),
 				//tabela Role
 				inverseJoinColumns = @JoinColumn( //unindo tabelas
 										name = "role_id", //da nova tabela = usuarios_role
