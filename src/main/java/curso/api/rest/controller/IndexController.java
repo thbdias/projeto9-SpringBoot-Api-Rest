@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import curso.api.rest.model.Usuario;
 import curso.api.rest.repository.UsuarioRepository;
+import curso.api.rest.service.ImplementacaoUserDetailsService;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,6 +30,8 @@ public class IndexController {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	@Autowired
+	private ImplementacaoUserDetailsService implementacaoUserDetailsService;
 	
 //	@GetMapping(value = "v1/{id}", produces = "application/json") //ou
 //	@GetMapping(value = "{id}", produces = "application/json", headers = "X-API-Version=v1") //passar no cabecalho da requisicao
@@ -81,9 +84,11 @@ public class IndexController {
 		}
 		
 		String senhacriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());
-		usuario.setSenha(senhacriptografada);
-		
+		usuario.setSenha(senhacriptografada);		
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
+		
+		implementacaoUserDetailsService.insereAcessoPadrao(usuarioSalvo.getId());
+		
 		return new ResponseEntity<Usuario>(usuarioSalvo, HttpStatus.OK);
 	}
 	
