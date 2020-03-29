@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import curso.api.rest.model.Usuario;
 
@@ -22,16 +23,14 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 					+ "from information_schema.constraint_column_usage "
 					+ "where table_name = 'usuarios_role' "
 						+ "and column_name = 'role_id' "
-						+ "and constraint_name <> 'unique_role_user';", 
+						+ "and constraint_name <> 'unique_role_user'", 
 					nativeQuery = true)
 	String consultaConstraintRole();
 		
+		
+	@Transactional
 	@Modifying //quando tiver alteracao no banco de dados deve-se usar essa anotacao
-	@Query(value = "alter table usuarios_role drop constraint ?1;", nativeQuery = true)
-	void removerConstratintRole(String constraint);
-	
-	@Modifying
 	@Query(value = "insert into usuarios_role (usuario_id, role_id) "
-					+ "values (?1, select id from role where nome_role = 'ROLE_USER');")
+					+ "values (?1, (select id from role where nome_role = 'ROLE_USER'))", nativeQuery = true)
 	void insereAcessoRolePadrao(Long idUser);
 }

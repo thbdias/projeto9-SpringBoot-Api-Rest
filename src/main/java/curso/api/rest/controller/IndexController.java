@@ -89,6 +89,8 @@ public class IndexController {
 		
 		implementacaoUserDetailsService.insereAcessoPadrao(usuarioSalvo.getId());
 		
+		//FALTA TRATAR O ROLLBACK PARA SE DER PROBLEMA DESFAZER A GRAVAÇÃO
+		
 		return new ResponseEntity<Usuario>(usuarioSalvo, HttpStatus.OK);
 	}
 	
