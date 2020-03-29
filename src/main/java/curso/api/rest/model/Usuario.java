@@ -35,7 +35,9 @@ public class Usuario implements UserDetails {
 	@Column(unique = true)
 	private String login;
 	private String senha;
-	private String nome;	
+	private String nome;
+	
+	//OneToMany -> um usuário pode ter muitos telefones
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Telefone> telefones = new ArrayList<Telefone>();
 	

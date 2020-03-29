@@ -23,7 +23,7 @@ public class Telefone implements Serializable {
 	private Long id;
 	private String numero;
 
-	@JsonIgnore
+	@JsonIgnore //evitar loop
 	@ForeignKey(name = "usuario_id")
 	@ManyToOne(optional = false) //é obrigatorio
 	private Usuario usuario;
