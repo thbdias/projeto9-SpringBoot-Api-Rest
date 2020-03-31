@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import curso.api.rest.model.Usuario;
+import curso.api.rest.repository.TelefoneRepository;
 import curso.api.rest.repository.UsuarioRepository;
 import curso.api.rest.service.ImplementacaoUserDetailsService;
 
@@ -30,6 +31,8 @@ public class IndexController {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	@Autowired
+	private TelefoneRepository telefoneRepository;
 	@Autowired
 	private ImplementacaoUserDetailsService implementacaoUserDetailsService;
 	
@@ -117,6 +120,12 @@ public class IndexController {
 				
 		usuarioRepository.deleteById(id);
 		return new ResponseEntity("deletado", HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "/removerTelefone/{id}", produces = "application/text")
+	public String deleteTelefone(@PathVariable("id") Long id) {
+		telefoneRepository.deleteById(id);
+		return "ok";
 	}
 	
 }
