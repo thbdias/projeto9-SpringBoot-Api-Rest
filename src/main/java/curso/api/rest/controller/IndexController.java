@@ -96,11 +96,43 @@ public class IndexController {
 	
 	
 	@GetMapping(value = "/usuarioPorNome/{nome}", produces = "application/json")	
-	public ResponseEntity<List<Usuario>> usuarioPorNome(@PathVariable("nome") String nome) throws InterruptedException {		
+	public ResponseEntity<Page<Usuario>> usuarioPorNome(@PathVariable("nome") String nome) throws InterruptedException {		
 		
-		List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findUserByNome(nome);
+		PageRequest pageRequest = null;
+		Page<Usuario> usuarios = null;
 		
-		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
+		if (nome == null || (nome != null && nome.trim().isEmpty()) || nome.equalsIgnoreCase("undefined")) {
+			pageRequest = PageRequest.of(0, 5, Sort.by("nome"));
+			usuarios = usuarioRepository.findAll(pageRequest);
+		} else {
+			pageRequest = PageRequest.of(0, 5, Sort.by("nome"));
+			usuarios = usuarioRepository.findUserByNomePage(nome, pageRequest);
+		}		
+		
+		//no back     -> usuarioRepository.findAll(page).getContent() 
+		//no angular -> data.content;
+		
+		return new ResponseEntity<Page<Usuario>>(usuarios, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/usuarioPorNome/{nome}/page/{page}", produces = "application/json")	
+	public ResponseEntity<Page<Usuario>> usuarioPorNomePage(@PathVariable("nome") String nome, @PathVariable("page") Integer page) throws InterruptedException {		
+		
+		PageRequest pageRequest = null;
+		Page<Usuario> usuarios = null;
+		
+		if (nome == null || (nome != null && nome.trim().isEmpty()) || nome.equalsIgnoreCase("undefined")) {
+			pageRequest = PageRequest.of(page, 5, Sort.by("nome"));
+			usuarios = usuarioRepository.findAll(pageRequest);
+		} else {
+			pageRequest = PageRequest.of(page, 5, Sort.by("nome"));
+			usuarios = usuarioRepository.findUserByNomePage(nome, pageRequest);
+		}		
+		
+		//no back     -> usuarioRepository.findAll(page).getContent() 
+		//no angular -> data.content;
+		
+		return new ResponseEntity<Page<Usuario>>(usuarios, HttpStatus.OK);
 	}
 	
 	
