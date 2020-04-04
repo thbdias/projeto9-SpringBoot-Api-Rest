@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -59,13 +62,19 @@ public class IndexController {
 //	@Cacheable("cacheusuarios") //mantem em cache os dados, porém quando há atualização o cache permanece antigo
 	@GetMapping(value = "/", produces = "application/json")	
 	@CachePut("cacheusuarios") //mantem em cache os dados, e quando há atualização o cache é atualizado ?????? acho que não ta funcionando direito
-	public ResponseEntity<List<Usuario>> init2() throws InterruptedException {		
+	public ResponseEntity<Page<Usuario>> init2() throws InterruptedException {		
 		
-		List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
+		//paginacao
+		PageRequest page = PageRequest.of(0, 5, Sort.by("nome"));
+		Page<Usuario> usuarios = usuarioRepository.findAll(page); 
 		
-//		Thread.sleep(6000); //segura o codigo por 6 segundos, simulando um processo lento
+		//no back     -> usuarioRepository.findAll(page).getContent() 
+		//no angular -> data.content;
 		
-		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
+		//no back    -> usuarioRepository.findAll(page).getTotalElements()
+	    //no angular -> data.totalElements;
+		
+		return new ResponseEntity<Page<Usuario>>(usuarios, HttpStatus.OK);
 	}
 	
 	
