@@ -135,7 +135,7 @@ public class Usuario implements UserDetails {
 
 	//sao os acessos do usuario ROLE_ADMIN...
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {				
+	public Collection<Role> getAuthorities() {				
 		return this.roles;
 	}
 
