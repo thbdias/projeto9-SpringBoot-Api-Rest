@@ -3,6 +3,7 @@ package curso.api.rest.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,11 +18,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -67,6 +73,19 @@ public class Usuario implements UserDetails {
 			)
 	private List<Role> roles = new ArrayList<Role>();
 	
+	@JsonFormat(pattern = "dd/MM/yyyy") //carregar para o frontend nesse formato
+	@Temporal(TemporalType.DATE) //tipo de formato que vai gravar no banco de dados
+	@DateTimeFormat(iso = ISO.DATE, pattern="dd/MM/yyyy") //receber do frontend nesse formato
+	private Date dataNascimento;
+	
+	
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
 
 	public Long getId() {
 		return id;
