@@ -17,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,7 +46,8 @@ public class Usuario implements UserDetails {
 	
 	//OneToMany -> um usuário pode ter muitos telefones
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Telefone> telefones = new ArrayList<Telefone>();
+	private List<Telefone> telefones = new ArrayList<Telefone>();	
+	
 	
 	//OneToMany -> um usuário pode ter muitas regras (roles)
 	@OneToMany(fetch = FetchType.EAGER)
@@ -78,6 +80,20 @@ public class Usuario implements UserDetails {
 	@DateTimeFormat(iso = ISO.DATE, pattern="dd/MM/yyyy") //receber do frontend nesse formato
 	private Date dataNascimento;
 	
+	
+	@ManyToOne
+	private Profissao profissao;
+	
+	
+	
+	
+	public void setProfissao(Profissao profissao) {
+		this.profissao = profissao;
+	}
+	
+	public Profissao getProfissao() {
+		return profissao;
+	}
 	
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
