@@ -1,6 +1,7 @@
 package curso.api.rest.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -43,6 +44,7 @@ public class Usuario implements UserDetails {
 	private String login;
 	private String senha;
 	private String nome;
+	private BigDecimal salario;
 	
 	//OneToMany -> um usuário pode ter muitos telefones
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -86,6 +88,17 @@ public class Usuario implements UserDetails {
 	
 	
 	
+	
+	
+	
+	
+	public void setSalario(BigDecimal salario) {
+		this.salario = salario;
+	}
+	
+	public BigDecimal getSalario() {
+		return salario;
+	}	
 	
 	public void setProfissao(Profissao profissao) {
 		this.profissao = profissao;
