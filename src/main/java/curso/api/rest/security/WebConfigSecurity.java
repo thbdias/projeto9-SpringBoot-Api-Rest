@@ -46,6 +46,9 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter {
 		//Qualquer usuario acessa ao index
 		.antMatchers(HttpMethod.GET, "/index").permitAll() 
 		
+		//Qualquer usuario acessa ao recuperar senha
+		.antMatchers(HttpMethod.POST, "/recuperar/**").permitAll()
+		
 		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 		
 		.anyRequest().authenticated()
