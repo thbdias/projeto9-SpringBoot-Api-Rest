@@ -31,6 +31,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 						+ "and constraint_name <> 'unique_role_user'", 
 					nativeQuery = true)
 	String consultaConstraintRole();
+	
+	@Transactional
+	@Modifying
+	@Query(value = "update usuario set senha = ?1 where id = ?2", nativeQuery = true)
+	void updateSenha(String senha, Long codUser);
 		
 		
 	@Transactional
@@ -55,4 +60,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 		
 		return retorno;
 	}
+	
 }

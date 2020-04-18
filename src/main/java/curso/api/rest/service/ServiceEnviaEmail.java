@@ -25,6 +25,7 @@ public class ServiceEnviaEmail {
 		
 		//propriedades para envio de email
 		Properties properties = new Properties();
+		properties.put("mail.smtp.ssl.trust", "*");
 		properties.put("mail.smtp.auth", "true"); //autorização
 		properties.put("mail.smtp.starttls", "true"); //autenticacao
 		properties.put("mail.smtp.host", "smtp.gmail.com"); //servidor google
